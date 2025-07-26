@@ -1,0 +1,16 @@
+[
+  {
+    "Id": 1,
+    "userId": "1",
+    "message": "Remember when you were worried about starting that new project? Well, future you wants to know - did you take the leap? I hope you're reading this having conquered those fears and achieved something amazing!",
+    "unlockDate": "2024-06-15",
+    "isUnlocked": false
+  },
+  {
+    "Id": 2,
+    "userId": "1",
+    "message": "Happy New Year, future me! I hope this year brought you everything you dreamed of and more. Remember to stay grateful for all the little moments that made this year special.",
+    "unlockDate": "2025-01-01",
+    "isUnlocked": false
+  }
+]

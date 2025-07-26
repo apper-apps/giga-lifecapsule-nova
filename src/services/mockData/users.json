@@ -1,0 +1,13 @@
+[
+  {
+    "Id": 1,
+    "name": "Sarah",
+    "email": "sarah@example.com",
+    "subscriptionStatus": "free",
+    "dailyChatCount": 3,
+    "streakCount": 5,
+    "xpPoints": 350,
+    "currentLevel": 3,
+    "badges": ["First Memory", "Week Warrior", "Chat Champion"]
+  }
+]

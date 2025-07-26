@@ -1,0 +1,42 @@
+[
+  {
+    "Id": 1,
+    "userId": "1",
+    "text": "Had the most amazing sunset walk today. The sky was painted in shades of orange and pink, and I felt so grateful to be alive and witness such beauty. Sometimes the simple moments are the most precious.",
+    "timestamp": "2024-01-15T18:30:00.000Z",
+    "tags": ["nature", "gratitude", "sunset", "walk"],
+    "mood": "grateful"
+  },
+  {
+    "Id": 2,
+    "userId": "1",
+    "text": "Finally finished reading that book I've been working on for months! The ending was so satisfying and made me think about my own life journey. Proud of myself for sticking with it even when it got challenging.",
+    "timestamp": "2024-01-14T21:15:00.000Z",
+    "tags": ["books", "accomplishment", "reading", "personal growth"],
+    "mood": "proud"
+  },
+  {
+    "Id": 3,
+    "userId": "1",
+    "text": "Had coffee with Mom today and we talked for hours about everything and nothing. She told me stories from her childhood that I'd never heard before. These moments with family are so precious.",
+    "timestamp": "2024-01-13T14:20:00.000Z",
+    "tags": ["family", "coffee", "stories", "connection"],
+    "mood": "happy"
+  },
+  {
+    "Id": 4,
+    "userId": "1",
+    "text": "Tried meditation for the first time today. It was harder than I expected to quiet my mind, but I felt so calm and centered afterwards. Definitely want to make this a regular practice.",
+    "timestamp": "2024-01-12T07:00:00.000Z",
+    "tags": ["meditation", "mindfulness", "self-care", "new experience"],
+    "mood": "calm"
+  },
+  {
+    "Id": 5,
+    "userId": "1",
+    "text": "Surprise birthday party at work today! I had no idea my colleagues were planning something. Felt so loved and appreciated. The cake was delicious and the laughter was even better.",
+    "timestamp": "2024-01-11T16:45:00.000Z",
+    "tags": ["birthday", "work", "surprise", "celebration", "colleagues"],
+    "mood": "excited"
+  }
+]

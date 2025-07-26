@@ -1,0 +1,23 @@
+[
+  {
+    "Id": 1,
+    "userId": "1",
+    "message": "I'm feeling a bit overwhelmed with work lately",
+    "response": "Oh Sarah, I can really hear the weight in your words 💙 Work overwhelm is so common, and it's completely valid to feel this way. You're juggling so much! What's been the biggest source of stress for you lately? Sometimes just talking it through can help lighten the load a bit 🌟",
+    "timestamp": "2024-01-15T10:30:00.000Z"
+  },
+  {
+    "Id": 2,
+    "userId": "1",
+    "message": "Thanks, that helps. I think it's just the deadline pressure",
+    "response": "Deadline pressure is like a storm cloud that follows you around, isn't it? 🌧️ But you know what, Sarah? You've weathered storms before and come out stronger! Here's a little secret - break those big scary deadlines into tiny, bite-sized pieces. Each small step is a victory! 🎉 What's one small thing you could tackle today?",
+    "timestamp": "2024-01-15T10:35:00.000Z"
+  },
+  {
+    "Id": 3,
+    "userId": "1",
+    "message": "Had an amazing sunset walk today!",
+    "response": "Oh my goodness, Sarah! 🌅 Your energy is absolutely glowing right through the screen! There's something magical about sunset walks, isn't there? The way the light dances and the world seems to slow down just for you. I'm so happy you took that time for yourself - you deserve those beautiful moments! What was your favorite part about it? ✨",
+    "timestamp": "2024-01-15T19:00:00.000Z"
+  }
+]
