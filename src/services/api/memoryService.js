@@ -65,8 +65,13 @@ class MemoryService {
 
       const response = await this.apperClient.getRecordById('memory', id, params);
 
-      if (!response.success) {
+if (!response.success) {
         console.error(response.message);
+        // Check for specific "Record does not exist" error and provide user feedback
+        if (response.message && response.message.includes("Record does not exist")) {
+          const { toast } = await import("react-toastify");
+          toast.error("Memory not found. It may have been deleted or doesn't exist.");
+        }
         return null;
       }
 
