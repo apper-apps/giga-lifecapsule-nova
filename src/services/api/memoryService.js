@@ -1,79 +1,207 @@
-import memoriesData from "@/services/mockData/memories.json";
-
 class MemoryService {
   constructor() {
-    this.memories = [...memoriesData];
+    // Initialize ApperClient with Project ID and Public Key
+    this.initializeClient();
+  }
+
+  initializeClient() {
+    const { ApperClient } = window.ApperSDK;
+    this.apperClient = new ApperClient({
+      apperProjectId: import.meta.env.VITE_APPER_PROJECT_ID,
+      apperPublicKey: import.meta.env.VITE_APPER_PUBLIC_KEY
+    });
   }
 
   async getAll() {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([...this.memories]);
-      }, 400);
-    });
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "text" } },
+          { field: { Name: "timestamp" } },
+          { field: { Name: "mood" } },
+          { field: { Name: "userId" } },
+          { field: { Name: "CreatedOn" } }
+        ],
+        orderBy: [
+          {
+            fieldName: "timestamp",
+            sorttype: "DESC"
+          }
+        ]
+      };
+
+      const response = await this.apperClient.fetchRecords('memory', params);
+
+      if (!response.success) {
+        console.error(response.message);
+        return [];
+      }
+
+      return response.data || [];
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error fetching memories:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return [];
+    }
   }
 
   async getById(id) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const memory = this.memories.find(m => m.Id === parseInt(id));
-        if (memory) {
-          resolve({ ...memory });
-        } else {
-          reject(new Error("Memory not found"));
-        }
-      }, 300);
-    });
+    try {
+      const params = {
+        fields: [
+          { field: { Name: "Name" } },
+          { field: { Name: "Tags" } },
+          { field: { Name: "text" } },
+          { field: { Name: "timestamp" } },
+          { field: { Name: "mood" } },
+          { field: { Name: "userId" } }
+        ]
+      };
+
+      const response = await this.apperClient.getRecordById('memory', id, params);
+
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      return response.data;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error(`Error fetching memory with ID ${id}:`, error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
   async create(memoryData) {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        const newMemory = {
-          Id: Math.max(...this.memories.map(m => m.Id), 0) + 1,
-          userId: "1",
-          text: memoryData.text,
-          timestamp: memoryData.timestamp,
-          tags: memoryData.tags || [],
-          mood: memoryData.mood || ""
-        };
-        
-        this.memories.unshift(newMemory);
-        resolve({ ...newMemory });
-      }, 500);
-    });
+    try {
+      const params = {
+        records: [
+          {
+            Name: memoryData.text?.substring(0, 50) || "Memory",
+            Tags: Array.isArray(memoryData.tags) ? memoryData.tags.join(",") : "",
+            text: memoryData.text,
+            timestamp: memoryData.timestamp,
+            mood: memoryData.mood || "",
+            userId: 1
+          }
+        ]
+      };
+
+      const response = await this.apperClient.createRecord('memory', params);
+
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulRecords = response.results.filter(result => result.success);
+        const failedRecords = response.results.filter(result => !result.success);
+
+        if (failedRecords.length > 0) {
+          console.error(`Failed to create memory ${failedRecords.length} records:${JSON.stringify(failedRecords)}`);
+        }
+
+        return successfulRecords.length > 0 ? successfulRecords[0].data : null;
+      }
+
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error creating memory:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
   async update(id, updateData) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = this.memories.findIndex(m => m.Id === parseInt(id));
-        if (index !== -1) {
-          this.memories[index] = {
-            ...this.memories[index],
-            ...updateData,
-            Id: parseInt(id)
-          };
-          resolve({ ...this.memories[index] });
-        } else {
-          reject(new Error("Memory not found"));
+    try {
+      const params = {
+        records: [
+          {
+            Id: parseInt(id),
+            Name: updateData.text?.substring(0, 50) || "Memory",
+            Tags: Array.isArray(updateData.tags) ? updateData.tags.join(",") : updateData.Tags || "",
+            text: updateData.text,
+            timestamp: updateData.timestamp,
+            mood: updateData.mood || ""
+          }
+        ]
+      };
+
+      const response = await this.apperClient.updateRecord('memory', params);
+
+      if (!response.success) {
+        console.error(response.message);
+        return null;
+      }
+
+      if (response.results) {
+        const successfulUpdates = response.results.filter(result => result.success);
+        const failedUpdates = response.results.filter(result => !result.success);
+
+        if (failedUpdates.length > 0) {
+          console.error(`Failed to update memory ${failedUpdates.length} records:${JSON.stringify(failedUpdates)}`);
         }
-      }, 400);
-    });
+
+        return successfulUpdates.length > 0 ? successfulUpdates[0].data : null;
+      }
+
+      return null;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error updating memory:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return null;
+    }
   }
 
   async delete(id) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        const index = this.memories.findIndex(m => m.Id === parseInt(id));
-        if (index !== -1) {
-          const deleted = this.memories.splice(index, 1)[0];
-          resolve({ ...deleted });
-        } else {
-          reject(new Error("Memory not found"));
+    try {
+      const params = {
+        RecordIds: [parseInt(id)]
+      };
+
+      const response = await this.apperClient.deleteRecord('memory', params);
+
+      if (!response.success) {
+        console.error(response.message);
+        return false;
+      }
+
+      if (response.results) {
+        const successfulDeletions = response.results.filter(result => result.success);
+        const failedDeletions = response.results.filter(result => !result.success);
+
+        if (failedDeletions.length > 0) {
+          console.error(`Failed to delete memory ${failedDeletions.length} records:${JSON.stringify(failedDeletions)}`);
         }
-      }, 300);
-    });
+
+        return successfulDeletions.length > 0;
+      }
+
+      return false;
+    } catch (error) {
+      if (error?.response?.data?.message) {
+        console.error("Error deleting memory:", error?.response?.data?.message);
+      } else {
+        console.error(error.message);
+      }
+      return false;
+    }
   }
 }
 

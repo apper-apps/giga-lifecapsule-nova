@@ -1,17 +1,17 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Header from "@/components/organisms/Header";
-import MemoryCard from "@/components/molecules/MemoryCard";
-import Button from "@/components/atoms/Button";
-import Input from "@/components/atoms/Input";
-import Badge from "@/components/atoms/Badge";
+import { toast } from "react-toastify";
+import { memoryService } from "@/services/api/memoryService";
 import ApperIcon from "@/components/ApperIcon";
+import MemoryCard from "@/components/molecules/MemoryCard";
+import MemoryForm from "@/components/organisms/MemoryForm";
+import Header from "@/components/organisms/Header";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
-import MemoryForm from "@/components/organisms/MemoryForm";
-import { memoryService } from "@/services/api/memoryService";
-import { toast } from "react-toastify";
+import Badge from "@/components/atoms/Badge";
+import Input from "@/components/atoms/Input";
+import Button from "@/components/atoms/Button";
 
 const Memories = () => {
   const [memories, setMemories] = useState([]);
@@ -48,8 +48,10 @@ const Memories = () => {
       const data = await memoryService.getAll();
       setMemories(data);
       
-      // Extract all unique tags
-      const tags = [...new Set(data.flatMap(memory => memory.tags || []))];
+// Extract all unique tags
+      const tags = [...new Set(data.flatMap(memory => 
+        memory.Tags ? memory.Tags.split(',').map(tag => tag.trim()).filter(tag => tag) : []
+      ))];
       setAllTags(tags);
     } catch (err) {
       setError(err.message);
@@ -61,23 +63,22 @@ const Memories = () => {
   const filterMemories = () => {
     let filtered = memories;
 
-    // Filter by search term
+// Filter by search term
     if (searchTerm) {
       filtered = filtered.filter(memory =>
         memory.text.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        (memory.tags || []).some(tag => 
+        (memory.Tags ? memory.Tags.split(',').some(tag => 
           tag.toLowerCase().includes(searchTerm.toLowerCase())
-        )
+        ) : false)
       );
     }
 
     // Filter by selected tags
-    if (selectedTags.length > 0) {
-      filtered = filtered.filter(memory =>
-        selectedTags.every(tag => 
-          (memory.tags || []).includes(tag)
-        )
-      );
+if (selectedTags.length > 0) {
+      filtered = filtered.filter(memory => {
+        const memoryTags = memory.Tags ? memory.Tags.split(',').map(tag => tag.trim()) : [];
+        return selectedTags.every(tag => memoryTags.includes(tag));
+      });
     }
 
     // Filter by mood

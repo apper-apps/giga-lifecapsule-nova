@@ -7,17 +7,18 @@ import Badge from "@/components/atoms/Badge";
 import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
+import { useSelector } from 'react-redux';
 import { userService } from "@/services/api/userService";
 import { memoryService } from "@/services/api/memoryService";
 import { chatService } from "@/services/api/chatService";
 import { futureCapsuleService } from "@/services/api/futureCapsuleService";
 
 const Profile = () => {
+  const { user } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   useEffect(() => {
     loadProfile();
   }, []);
@@ -83,8 +84,8 @@ const Profile = () => {
             <ApperIcon name="User" size={32} className="text-white" />
           </div>
           
-          <h2 className="text-2xl font-display gradient-text mb-2">
-            {userData?.name}
+<h2 className="text-2xl font-display gradient-text mb-2">
+            {userData?.Name || user?.firstName || 'User'}
           </h2>
           
           <div className="flex items-center justify-center space-x-2 mb-4">

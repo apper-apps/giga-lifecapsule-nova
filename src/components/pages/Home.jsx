@@ -1,21 +1,23 @@
-import { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import Header from "@/components/organisms/Header";
+import { useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { userService } from "@/services/api/userService";
+import { chatService } from "@/services/api/chatService";
+import { memoryService } from "@/services/api/memoryService";
+import ApperIcon from "@/components/ApperIcon";
+import QuickStats from "@/components/molecules/QuickStats";
 import StreakDisplay from "@/components/molecules/StreakDisplay";
 import XPProgress from "@/components/molecules/XPProgress";
-import QuickStats from "@/components/molecules/QuickStats";
-import Button from "@/components/atoms/Button";
-import Card from "@/components/atoms/Card";
-import ApperIcon from "@/components/ApperIcon";
+import MemoryForm from "@/components/organisms/MemoryForm";
+import Header from "@/components/organisms/Header";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
-import { userService } from "@/services/api/userService";
-import { memoryService } from "@/services/api/memoryService";
-import { chatService } from "@/services/api/chatService";
-import MemoryForm from "@/components/organisms/MemoryForm";
-import { toast } from "react-toastify";
+import Button from "@/components/atoms/Button";
+import Card from "@/components/atoms/Card";
 
 const Home = () => {
+  const { user } = useSelector((state) => state.user);
   const [userData, setUserData] = useState(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -100,8 +102,8 @@ const Home = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center py-4"
         >
-          <h2 className="text-2xl font-display gradient-text mb-2">
-            Welcome back, {userData?.name}! 👋
+<h2 className="text-2xl font-display gradient-text mb-2">
+            Welcome back, {userData?.Name || user?.firstName || 'User'}! 👋
           </h2>
           <p className="text-gray-600">
             Ready to capture some memories today?

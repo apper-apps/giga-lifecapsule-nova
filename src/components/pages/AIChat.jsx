@@ -8,12 +8,14 @@ import ApperIcon from "@/components/ApperIcon";
 import Loading from "@/components/ui/Loading";
 import Error from "@/components/ui/Error";
 import Empty from "@/components/ui/Empty";
+import { useSelector } from 'react-redux';
 import { chatService } from "@/services/api/chatService";
 import { userService } from "@/services/api/userService";
 import { aiService } from "@/services/api/aiService";
 import { toast } from "react-toastify";
 
 const AIChat = () => {
+  const { user } = useSelector((state) => state.user);
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -47,9 +49,9 @@ const AIChat = () => {
 
       // Show welcome message if first time
       if (chatHistory.length === 0) {
-        const welcomeMessage = {
+const welcomeMessage = {
           Id: Date.now(),
-          message: `Hey ${user.name}! 🌟 I'm your AI companion here to listen, chat, and help you reflect on your memories. How are you feeling today?`,
+          message: `Hey ${user?.Name || user?.firstName || 'friend'}! 🌟 I'm your AI companion here to listen, chat, and help you reflect on your memories. How are you feeling today?`,
           response: "",
           timestamp: new Date().toISOString(),
           isUser: false
@@ -85,7 +87,7 @@ const AIChat = () => {
 
     try {
       // Get AI response
-      const aiResponse = await aiService.getChatResponse(inputValue.trim(), userData?.name);
+const aiResponse = await aiService.getChatResponse(inputValue.trim(), userData?.Name || user?.firstName || 'friend');
       
       const aiMessage = {
         Id: Date.now() + 1,

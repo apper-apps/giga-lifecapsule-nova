@@ -18,7 +18,7 @@ const FutureCapsules = () => {
   const [capsules, setCapsules] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showForm, setShowForm] = useState(false);
+const [showForm, setShowForm] = useState(false);
   const [userData, setUserData] = useState(null);
   const [formData, setFormData] = useState({
     message: "",
