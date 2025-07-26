@@ -28,22 +28,12 @@ class UserService {
         ]
       };
 
-      const response = await this.apperClient.getRecordById('user_profile', this.currentUserId, params);
+const response = await this.apperClient.getRecordById('user_profile', this.currentUserId, params);
 
       if (!response.success) {
         console.error(response.message);
-        // Return default user if not found
-        return {
-          Id: this.currentUserId,
-          Name: "User",
-          email: "user@example.com", 
-          subscriptionStatus: "free",
-          dailyChatCount: 0,
-          streakCount: 0,
-          xpPoints: 0,
-          currentLevel: 1,
-          badges: []
-        };
+        // Create default user if not found
+        return await this.createDefaultUser();
       }
 
       // Handle badges field (MultiPicklist comes as comma-separated string)
@@ -61,11 +51,75 @@ class UserService {
         console.error(error.message);
       }
       // Return default user on error
+return await this.createDefaultUser();
+    }
+  }
+
+  async createDefaultUser() {
+    try {
+      const defaultUserData = {
+        Name: "User",
+        email: "user@example.com",
+        subscriptionStatus: "free",
+        dailyChatCount: 0,
+        streakCount: 0,
+        xpPoints: 0,
+        currentLevel: 1,
+        badges: "" // Empty string for MultiPicklist
+      };
+
+      const createParams = {
+        records: [defaultUserData]
+      };
+
+      const createResponse = await this.apperClient.createRecord('user_profile', createParams);
+
+      if (!createResponse.success) {
+        console.error("Failed to create default user:", createResponse.message);
+        // Return fallback object if creation fails
+        return {
+          Id: this.currentUserId,
+          Name: "User",
+          email: "user@example.com",
+          subscriptionStatus: "free",
+          dailyChatCount: 0,
+          streakCount: 0,
+          xpPoints: 0,
+          currentLevel: 1,
+          badges: []
+        };
+      }
+
+      if (createResponse.results && createResponse.results[0]?.success) {
+        const createdUser = createResponse.results[0].data;
+        // Handle badges field conversion
+        if (createdUser.badges) {
+          createdUser.badges = createdUser.badges.split(',').filter(b => b.trim());
+        } else {
+          createdUser.badges = [];
+        }
+        return createdUser;
+      }
+
+      // Fallback if creation results are unexpected
+      return {
+        Id: this.currentUserId,
+        Name: "User", 
+        email: "user@example.com",
+        subscriptionStatus: "free",
+        dailyChatCount: 0,
+        streakCount: 0,
+        xpPoints: 0,
+        currentLevel: 1,
+        badges: []
+      };
+    } catch (error) {
+      console.error("Error creating default user:", error.message);
       return {
         Id: this.currentUserId,
         Name: "User",
-        email: "user@example.com",
-        subscriptionStatus: "free", 
+        email: "user@example.com", 
+        subscriptionStatus: "free",
         dailyChatCount: 0,
         streakCount: 0,
         xpPoints: 0,
